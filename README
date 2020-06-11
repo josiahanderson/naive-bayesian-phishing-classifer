@@ -17,6 +17,8 @@ https://www.kaggle.com/akashkr/phishing-website-dataset
 This project contains the following files:
 bayes.py
 project_phishing_dataset_cleaned.csv
+LICENSE
+README
 
 The bayes.py script is written in Python 3.6 and requires no arguments.
 Parameters may be edited (such as CSV location, training set percentage, 
