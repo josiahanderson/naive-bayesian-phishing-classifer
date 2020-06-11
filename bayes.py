@@ -18,17 +18,33 @@ https://iq.opengenus.org/bernoulli-naive-bayes/
 Data set:
 https://www.kaggle.com/akashkr/phishing-website-dataset
 
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 """
 
 import pandas
 from sklearn import metrics
 
 
-CSV_PATH_TO_DATA = '/home/darkstar/Downloads/UCR/CS_235/project/project_phishing_dataset_cleaned.csv'
+CSV_PATH_TO_DATA = '/home/darkstar/Downloads/UCR/CS_235/project/final_project/project_phishing_dataset_cleaned.csv'
 TRAINING_SET_PERCENTAGE = 0.80 # We will use 80% of our data for training, and the rest for testing
 PHISHING = -1
 LEGITIMATE = 1
-LAPLACE_SMOOTHING = 0.00000000000000001
+CLASS_LABEL = 'result'
+INDEX = 'site'
+LAPLACE_SMOOTHING = 0.0000000000001
 
 
 def loadDataSet(csvPath):
@@ -50,8 +66,8 @@ def partitionDataIntoSets(dataSet):
 
 def groupDataByClasses(data):
     
-    phishingSites = data[data['result'] == PHISHING]
-    legitimateSites = data[data['result'] == LEGITIMATE]
+    phishingSites = data[data[CLASS_LABEL] == PHISHING]
+    legitimateSites = data[data[CLASS_LABEL] == LEGITIMATE]
     
     return phishingSites, legitimateSites
 
@@ -74,16 +90,16 @@ def calculateFeatureProbabilitiesByClass(data):
     
     phishingSites, legitimateSites = groupDataByClasses(data)
         
-    numberOfPhishingSites = phishingSites['result'].count()
-    numberOfLegitimateSites = legitimateSites['result'].count()
+    numberOfPhishingSites = phishingSites[CLASS_LABEL].count()
+    numberOfLegitimateSites = legitimateSites[CLASS_LABEL].count()
     phishingFeaturesProbability = []
     legitimateFeaturesProbability = []
     
     # These are irrelevant to feature probabilities
-    phishingSites.drop(columns=['site'])
-    phishingSites.drop(columns=['result'])
-    legitimateSites.drop(columns=['site'])
-    legitimateSites.drop(columns=['result'])
+    phishingSites.drop(columns=[INDEX])
+    phishingSites.drop(columns=[CLASS_LABEL])
+    legitimateSites.drop(columns=[INDEX])
+    legitimateSites.drop(columns=[CLASS_LABEL])
     
     for feature in list(phishingSites):
     
@@ -199,7 +215,7 @@ def naiveBayesClassifier(trainingSet, testSet):
  
 def evaluateClassifier(testData, classificationLabels):
     
-    actualLabels = testData['result']
+    actualLabels = testData[CLASS_LABEL]
     
     print("Confusion Matrix: ")
     print()
